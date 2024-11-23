@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+        }
+        .container {
+            width: 500px;
+            margin: 50px auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+        }
+        table {
+            width: 100%;
+            margin-top: 20px;
+        }
+        td, th {
+            padding: 10px;
+            border: 1px solid #ddd;
+        }
+        .btn {
+            background-color: #28a745;
+            color: white;
+            padding: 5px 10px;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .btn-danger {
+            background-color: red;
+        }
+        .status {
+            color: white;
+            padding: 5px;
+            border-radius: 5px;
+        }
+        .pending {
+            background-color: orange;
+        }
+        .in-progress {
+            background-color: blue;
+        }
+        .completed {
+            background-color: green;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>To-Do List</h1>
+    
+    <form action="/add" method="POST">
+        <input type="text" name="title" placeholder="Task title" required><br><br>
+        <textarea name="description" placeholder="Task description" required></textarea><br><br>
+        <input type="text" name="status" placeholder="Status (Pending, In Progress, Completed)" required><br><br>
+        <select name="priority_id">
+            <option value="1">High</option>
+            <option value="2">Medium</option>
+            <option value="3">Low</option>
+        </select>
+        <select name="category_id">
+            <option value="1">Work</option>
+            <option value="2">Family</option>
+            <option value="3">Study</option>
+        </select><br><br>
+        <button type="submit" class="btn">Add Task</button>
+    </form>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Status</th>
+                <th>Priority</th>
+                <th>Category</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for task in tasks %}
+            <tr>
+                <td>{{ task['title'] }}</td>
+                <td>{{ task['description'] }}</td>
+                <td>
+                    <span class="status {{ task['status']|lower }}">{{ task['status'] }}</span>
+                </td>
+                <td>{{ task['priority'] }}</td>
+                <td>{{ task['category'] }}</td>
+                <td>
+                    <a href="{{ url_for('edit_task', id=task['id']) }}" class="btn">Edit</a>
+                    <form action="{{ url_for('delete_task', id=task['id']) }}" method="POST" style="display:inline;">
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                    <form action="{{ url_for('update_status', id=task['id'], status='Pending') }}" method="POST" style="display:inline;">
+                        <button type="submit" class="btn btn-warning">Mark as Pending</button>
+                    </form>
+                    <form action="{{ url_for('update_status', id=task['id'], status='In Progress') }}" method="POST" style="display:inline;">
+                        <button type="submit" class
